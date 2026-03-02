@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
 
-import org.springframework.data.annotation.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,10 +14,9 @@ import java.util.Set;
 @Table(name = "users")
 public class User implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
+    @Id
+    private Long id;
     @Column(name = "name")
     private String firstName;
 
@@ -28,9 +26,7 @@ public class User implements UserDetails {
     @Column(name = "email")
     private String email;
 
-    @Size(min=2, message = "Не меньше 5 знаков")
     private String username;
-    @Size(min=2, message = "Не меньше 5 знаков")
     private String password;
     @Transient
     private String passwordConfirm;
@@ -41,12 +37,14 @@ public class User implements UserDetails {
 
 
 
-    public User(String firstName, String lastName, String email, Car car) {
+    public User(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
 
     }
+
+
 
     public Long getId() {
         return id;
