@@ -19,6 +19,7 @@ import javax.persistence.PersistenceContext;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 @Service
 @Transactional(readOnly = true) // Для всех методов чтения
@@ -30,6 +31,8 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 
     @Autowired
     public UserService(UserRepository userRepository,
@@ -72,6 +75,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public boolean saveUser(User user) {
+        Logger log = Logger.getLogger(UserService.class.getName());
         User userFromDB = userRepository.findByUsername(user.getUsername());
         if (userFromDB != null) {
             return false;
@@ -81,16 +85,21 @@ public class UserService implements UserDetailsService {
 
             Role userRole = roleRepository.findByName("ROLE_USER");
 
+            log.info("ya zashel");
+
             if (userRole == null) {
                 userRole = new Role();
                 userRole.setName("ROLE_USER");
                 roleRepository.save(userRole);
             }
+
             user.setRoles(Collections.singleton(userRole));
         }
+        log.info("ya vishel");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
+        log.info("ya vishel2");
         return true;
     }
 

@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.util.logging.Logger;
+
 
 @Controller
 public class RegistrationController {
@@ -41,26 +43,28 @@ public class RegistrationController {
 
     @PostMapping("/registration")
     public String addUser(@ModelAttribute("userForm")  User userForm, BindingResult bindingResult, Model model) {
-
+        Logger log2 = Logger.getLogger(RegistrationController.class.getName());
         if (bindingResult.hasErrors()) {
             return "registration";
         }
-        if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+        /*if (!userForm.getPassword().equals(userForm.getPasswordConfirm())){
             model.addAttribute("passwordError", "Пароли не совпадают");
             return "registration";
-        }
+        }*/
+        log2.info("controller Ya zashel");
         if (!userService.saveUser(userForm)){
             model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
+            log2.info("controller Ya vishel");
             return "registration";
         }
 
         return "redirect:/";
     }
 
-    @GetMapping("/test")
+    /*@GetMapping("/test")
     public String test(Model model) {
         model.addAttribute("userForm", new User());
 
-        return "test_us";
-    }
+        return "test";
+    }*/
 }
