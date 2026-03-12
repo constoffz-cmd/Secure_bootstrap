@@ -53,11 +53,11 @@ public class AdminController {
                 model.addAttribute("usernameError", "User already exists");
                 return "user-info";
             }
-        } else { // Редактирование - просто перенаправляем (без реального сохранения пока)
-            // TODO: Реализовать userService.updateUser()
+        } else {
+            userService.updateUser(user);
         }
         //return "users";
-        return "redirect:/";
+        return "users";
     }
 
 
@@ -65,15 +65,14 @@ public class AdminController {
     public String editUserForm(@RequestParam("id") Long id, Model model) {
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
-        return "user-info";
+        return "user-info_update";
     }
 
 
     @PostMapping("/admin/delete")
     public String deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
-        //return "users";
-        return "redirect:/";
+        return "users";
     }
 
     @GetMapping("/admin/users")

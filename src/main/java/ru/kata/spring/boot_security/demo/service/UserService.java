@@ -52,7 +52,6 @@ public class UserService implements UserDetailsService, UserServiceInter {
 
         if (user == null) {
             log.info("User not found: " + username);
-
             throw new UsernameNotFoundException("User not found: " + username);
         }
 
@@ -68,6 +67,7 @@ public class UserService implements UserDetailsService, UserServiceInter {
         Optional<User> userFromDb = userRepository.findById(userId);
         return userFromDb.orElse(null); // Возвращаем null вместо нового User
     }
+
 
     @Transactional(readOnly = true)
     public List<User> allUsers() {
@@ -86,8 +86,6 @@ public class UserService implements UserDetailsService, UserServiceInter {
 
             Role userRole = roleRepository.findByName("ROLE_USER");
 
-            log.info("ya zashel");
-
             if (userRole == null) {
                 userRole = new Role();
                 userRole.setName("ROLE_USER");
@@ -96,28 +94,12 @@ public class UserService implements UserDetailsService, UserServiceInter {
 
             user.setRoles(Collections.singleton(userRole));
         }
-        log.info("ya vishel");
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
         userRepository.save(user);
-        log.info("ya vishel2");
         return true;
     }
 
-    @Override
-    public List<User> listUsers() {
-        return List.of();
-    }
-
-    @Override
-    public User getUserById(Long Id) {
-        return null;
-    }
-
-    @Override
-    public void updateUser(User user) {
-
-    }
 
     @Transactional
     public boolean deleteUser(Long userId) {
@@ -129,9 +111,27 @@ public class UserService implements UserDetailsService, UserServiceInter {
     }
 
 
-
     @Transactional(readOnly = true)
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(User user) {
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+
+            Role userRole = roleRepository.findByName("ROLE_USER");
+
+            if (userRole == null) {
+                userRole = new Role();
+                userRole.setName("ROLE_USER");
+                roleRepository.save(userRole);
+            }
+
+            user.setRoles(Collections.singleton(userRole));
+        }
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
     }
 }

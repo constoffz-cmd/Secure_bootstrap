@@ -13,7 +13,7 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Если ID генерируется БД
     private Long id;
 
-    @Column()
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
 
 

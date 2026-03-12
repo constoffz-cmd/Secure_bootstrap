@@ -9,11 +9,7 @@ import java.util.List;
 
 public interface UserServiceInter {
     boolean saveUser(User user);
-
-    List<User> listUsers();
-
-    User getUserById(Long Id);
-
+    User findUserById(Long Id);
     void updateUser(User user);
 
     boolean deleteUser(Long id);
