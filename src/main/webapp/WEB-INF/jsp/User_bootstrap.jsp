@@ -105,6 +105,7 @@
                                                         </div>
                                                         <div class="modal-body col-md-8 mx-auto text-center">
                                                             <input type="hidden" name="id" value="${user.id}">
+                                                            <input type="hidden" name="username" value="${user.username}">
 
                                                             <label class="control-label">ID</label>
                                                             <input type="text" class="form-control bg-light" value="${user.id}" readonly>

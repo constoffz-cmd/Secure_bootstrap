@@ -17,13 +17,23 @@ import java.util.logging.Logger;
 @RequestMapping("/user")
 public class UserController {
 
+    private UserServiceInter userService;
+
+    @Autowired
+    public UserController(UserServiceInter userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/news")
     public String news() {
         return "news";
     }
 
     @GetMapping("/index")
-    public String index() {
+    public String index(Model model, java.security.Principal principal) {
+        User currentUser = (User) userService.findByUsername(principal.getName());
+        model.addAttribute("currentUser", currentUser);
+
         return "index";
     }
 
