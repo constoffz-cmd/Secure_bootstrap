@@ -1,64 +1,84 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>User Form</title>
-    <style>
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input { display: block; width: 300px; margin-bottom: 10px; padding: 5px; }
-        .btn { background: lightgreen; padding: 10px 20px; border: none; cursor: pointer; margin-top: 20px; }
-        .role-group { margin-top: 15px; border: 1px solid #ccc; padding: 10px; width: 300px; }
-    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-light">
 
-<h2>${user.id == null ? "Add New User" : "Edit User"}</h2>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">${user.id == null ? "Add New User" : "Edit User"}</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/save" method="post">
+                        <input type="hidden" name="id" value="${user.id}">
 
-<%-- ОДНА общая форма для всех полей --%>
-<form action="/admin/save" method="post">
+                        <div class="mb-3">
+                            <label class="form-label font-weight-bold">Username</label>
+                            <input type="text" name="username" class="form-control" value="${user.username}" required>
+                        </div>
 
-    <%-- Скрытое поле ID (Критически важно для Edit!) --%>
-    <input type="hidden" name="id" value="${user.id}">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="firstName" class="form-control" value="${user.firstName}">
+                            </div>
+                            <div class="col mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="lastName" class="form-control" value="${user.lastName}">
+                            </div>
+                        </div>
 
-    <label>Username (Login):</label>
-    <input type="text" name="username" value="${user.username}" required>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" value="${user.email}" required>
+                        </div>
 
-    <label>First Name:</label>
-    <input type="text" name="firstName" value="${user.firstName}" required>
+                        <div class="mb-3">
+                            <label class="form-label">Password</label>
+                            <input type="password" name="password" class="form-control"
+                                   placeholder="${user.id == null ? 'Enter password' : 'Leave empty to keep current'}">
+                        </div>
 
-    <label>Last Name:</label>
-    <input type="text" name="lastName" value="${user.lastName}" required>
 
-    <label>Email:</label>
-    <input type="email" name="email" value="${user.email}" required>
+                        <div class="mb-3 p-3 border rounded bg-white">
+                            <label class="form-label d-block">Roles</label>
+                            <c:forEach items="${allRoles}" var="role">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" name="selectedRoles"
+                                           value="${role.id}" id="role${role.id}"
+                                    <c:forEach items="${user.roles}" var="userRole">
+                                           <c:if test="${userRole.id == role.id}">checked</c:if>
+                                    </c:forEach>
+                                    >
+                                    <label class="form-check-label" for="role${role.id}">
+                                            ${role.name}
+                                    </label>
+                                </div>
+                            </c:forEach>
+                        </div>
 
-    <label>Password:</label>
-    <%-- При редактировании пароль не обязателен (required убираем) --%>
-    <input type="password" name="password" ${user.id == null ? "required" : ""}>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 
-    <div class="role-group">
-        <label>Roles:</label>
-        <c:forEach items="${allRoles}" var="role">
-            <div>
-                <input type="checkbox" name="selectedRoles" value="${role.id}"
-                <c:forEach items="${user.roles}" var="userRole">
-                       <c:if test="${userRole.id == role.id}">checked</c:if>
-                </c:forEach>
-                >
-                <span>${role.name}</span>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success">Save User</button>
+                            <a href="/admin/users" class="btn btn-link text-secondary">Back to list</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </c:forEach>
+        </div>
     </div>
+</div>
 
-    <%-- CSRF Токен --%>
-    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-
-    <button type="submit" class="btn">Save User</button>
-</form>
-
-<br>
-<a href="/admin/users">Back to list</a>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -26,6 +26,30 @@ public class AdminController {
         this.roleService = roleService;
     }
 
+    @GetMapping(value = { "/user_boot"})
+    public String test(Model model, java.security.Principal principal) {
+        model.addAttribute("users", userService.allUsers());
+        model.addAttribute("allRoles", roleService.getAllRoles());
+
+        User currentUser = (User) userService.findByUsername(principal.getName());
+        model.addAttribute("currentUser", currentUser);
+        return "User_bootstrap";
+    }
+
+    @GetMapping(value = { "/us3"})
+    public String test2(Model model) {
+        model.addAttribute("users", userService.allUsers());
+        model.addAttribute("role", roleService.getAllRoles());
+        return "us3";
+    }
+
+    @GetMapping(value = { "/u4"})
+    public String test4(Model model) {
+        model.addAttribute("users", userService.allUsers());
+        model.addAttribute("allRoles", roleService.getAllRoles());
+        return "u4";
+    }
+
 
     @GetMapping(value = {"", "/users"})
     public String listUsers(Model model) {
